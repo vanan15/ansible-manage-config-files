@@ -1,8 +1,49 @@
-- name: just print a message
-  debug:
-    msg: Hello friends!
-
 - name: create config dir for demo
   file:
     path: "{{ config_dir }}"
     state: directory
+
+#Using file to manage the whole config
+- name: copy config file
+  copy:
+    src: setenv.sh
+    dest: "{{ config_dir }}/setenv-copy.sh"
+    mode: "0755"
+
+
+#Using template to manage the whole config
+- name: render config file
+  template:
+    src: setenv.sh.j2
+    dest: "{{ config_dir }}/setenv-template.sh"
+    mode: "0755"
+
+#Create demo file for inject
+- name: create base file
+  copy:
+    src: setenv.sh
+    dest: "{{ config_dir }}/setenv-inject.sh"
+    mode: "0755"
+
+#Using lineinfile
+- name: insert a line after line containing Xmx
+  lineinfile:
+    path: "{{ config_dir }}/setenv-inject.sh"
+    line: "#This line is lineinfile"
+    insertafter: '-Xmx'
+
+#Using blockinfile
+- name: insert a block before line containing server
+  blockinfile:
+    path: "{{ config_dir }}/setenv-inject.sh"
+    block: |
+      export JAVA_OPTS="$JAVA_OPTS -XX:+UseConcMarkSweepGC"
+      export JAVA_OPTS="$JAVA_OPTS -XX:+CMSClassUnloadingEnabled"
+    insertbefore: '-server'
+
+#Using replace
+- name: change Xmx value
+  replace:
+    path: "{{ config_dir }}/setenv-inject.sh"
+    replace: '-Xmx{{ my_memory }}'
+    regexp: '-Xmx(\w+)'

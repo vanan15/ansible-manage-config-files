@@ -4,6 +4,7 @@
 
   vars:
     config_dir: /tmp/myconfig
+    my_memory: 1024m
 
   roles:
     - manage-config
