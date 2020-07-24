@@ -4,3 +4,7 @@
 - lineinfile
 - blockinfile
 - replace
+
+# How to run?
+- Prerequisite: Ansible installed
+- Run playbook: `./run-me.sh`
