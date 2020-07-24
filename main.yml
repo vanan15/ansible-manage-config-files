@@ -1,0 +1,9 @@
+- hosts: localhost
+  connection: local
+  become: false
+
+  vars:
+    config_dir: /tmp/myconfig
+
+  roles:
+    - manage-config

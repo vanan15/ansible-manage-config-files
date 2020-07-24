@@ -1,0 +1,8 @@
+- name: just print a message
+  debug:
+    msg: Hello friends!
+
+- name: create config dir for demo
+  file:
+    path: "{{ config_dir }}"
+    state: directory
